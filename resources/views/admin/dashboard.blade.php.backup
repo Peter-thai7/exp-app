@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>จัดการระบบ - ระบบบันทึกค่าใช้จ่าย</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>body { font-family: 'Noto Sans Thai', sans-serif; }</style>
+</head>
+<body class="bg-gray-100 min-h-screen">
+    <div class="container mx-auto px-4 py-8">
+        <!-- Header -->
+        <div class="bg-white rounded-xl shadow-md p-6 mb-6">
+            <h1 class="text-2xl font-bold text-gray-800 text-center">จัดการระบบ</h1>
+            <div class="text-center mt-4">
+                <a href="{{ route('expenses.index') }}" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 mr-2">
+                    กลับหน้ารายการ
+                </a>
+            </div>
+        </div>
+
+        <div class="grid md:grid-cols-2 gap-6">
+            <!-- Add Category Form -->
+            <div class="bg-white rounded-xl shadow-md p-6">
+                <h2 class="text-xl font-semibold mb-4">เพิ่มหมวดหมู่ใหม่</h2>
+                <form action="{{ route('admin.categories.store') }}" method="POST">
+                    @csrf
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium mb-1">ชื่อหมวดหมู่ (ไทย)</label>
+                            <input type="text" name="name_th" required class="w-full px-3 py-2 border rounded-lg">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium mb-1">ชื่อหมวดหมู่ (English)</label>
+                            <input type="text" name="name_en" class="w-full px-3 py-2 border rounded-lg">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium mb-1">คำอธิบาย</label>
+                            <textarea name="description" rows="2" class="w-full px-3 py-2 border rounded-lg"></textarea>
+                        </div>
+                        <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700">
+                            เพิ่มหมวดหมู่
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Add Type Form -->
+            <div class="bg-white rounded-xl shadow-md p-6">
+                <h2 class="text-xl font-semibold mb-4">เพิ่มรายการใหม่</h2>
+                <form action="{{ route('admin.types.store') }}" method="POST">
+                    @csrf
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium mb-1">เลือกหมวดหมู่</label>
+                            <select name="category_id" required class="w-full px-3 py-2 border rounded-lg">
+                                <option value="">-- เลือกหมวดหมู่ --</option>
+                                @foreach($categories as $category)
+                                    <option value="{{ $category->id }}">{{ $category->name_th }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium mb-1">ชื่อรายการ (ไทย)</label>
+                            <input type="text" name="name_th" required class="w-full px-3 py-2 border rounded-lg">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium mb-1">ชื่อรายการ (English)</label>
+                            <input type="text" name="name_en" class="w-full px-3 py-2 border rounded-lg">
+                        </div>
+                        <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
+                            เพิ่มรายการ
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Current Categories & Types -->
+        <div class="bg-white rounded-xl shadow-md p-6 mt-6">
+            <h2 class="text-xl font-semibold mb-4">หมวดหมู่และรายการทั้งหมด</h2>
+            <div class="space-y-4">
+                @foreach($categories as $category)
+                <div class="border rounded-lg p-4">
+                    <h3 class="font-semibold text-lg">{{ $category->name_th }}</h3>
+                    @if($category->description)
+                        <p class="text-gray-600 text-sm">{{ $category->description }}</p>
+                    @endif
+                    <div class="mt-2 pl-4">
+                        @foreach($category->types as $type)
+                            <div class="text-gray-700">• {{ $type->name_th }}</div>
+                        @endforeach
+                    </div>
+                </div>
+                @endforeach
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,18 @@
+# Restore from backup (example)
+cd /home/u943879768/domains/thaitech5.com/public_html/
+
+# Remove current version
+rm -rf exp
+
+# Restore from backup
+tar -xzf /home/u943879768/backups/project_20240925_143000.tar.gz
+
+# Restore database
+mysql -u u943879768_homeexp -p u943879768_expense < /home/u943879768/backups/database_20240925_143000.sql
+
+Do you know below paths is for my expense project. Please note that.
+https://exp.thaitech5.com/login : for user authentication
+https://exp.thaitech5.com/register สมัครสมาชิกใหม่
+https://exp.thaitech5.com/expenses/create บันทึกค่าใช้จ่ายใหม่ (Expense form)
+https://exp.thaitech5.com/expenses รายการค่าใช้จ่าย
+https://exp.thaitech5.com/admin สำหรับเพิ่มหมวดหมู่และรายการ (categories/items)

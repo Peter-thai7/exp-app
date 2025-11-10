@@ -1,0 +1,23 @@
+# Create: backup.sh (run before major changes)
+#!/bin/bash
+# Backup script for expense tracking system
+
+DATE=$(date +%Y%m%d_%H%M%S)
+BACKUP_DIR="/home/u943879768/backups"
+PROJECT_DIR="/home/u943879768/domains/thaitech5.com/public_html/exp"
+
+echo "Creating backup for expense system..."
+
+# Create backup directory if it doesn't exist
+mkdir -p $BACKUP_DIR
+
+# Backup database
+mysqldump -u u943879768_homeexp -p u943879768_expense > $BACKUP_DIR/database_$DATE.sql
+
+# Backup project files
+tar -czf $BACKUP_DIR/project_$DATE.tar.gz $PROJECT_DIR
+
+echo "Backup completed:"
+echo "- Database: database_$DATE.sql"
+echo "- Files: project_$DATE.tar.gz"
+echo "Backup location: $BACKUP_DIR/"

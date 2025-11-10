@@ -1,0 +1,47 @@
+<?php
+
+use App\Http\Controllers\AdminController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ExpenseController;
+use Illuminate\Support\Facades\Route;
+
+Route::get('/', function () {
+    return view('welcome');
+});
+
+Route::get('/dashboard', function () {
+    return view('dashboard');
+})->middleware(['auth', 'verified'])->name('dashboard');
+
+Route::middleware('auth')->group(function () {
+    // Profile routes
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+
+// Admin routes
+//old  Route::middleware(['auth', 'can:admin'])->group(function () {
+    Route::middleware(['auth'])->group(function () {
+    Route::get('/admin', [AdminController::class, 'dashboard'])->name('admin.dashboard');
+    Route::post('/admin/categories', [AdminController::class, 'createCategory'])->name('admin.categories.store');
+    Route::post('/admin/types', [AdminController::class, 'createType'])->name('admin.types.store');
+});
+
+
+    // Expense routes - This one line creates ALL CRUD routes
+    Route::resource('expenses', ExpenseController::class);
+
+    // API route for fetching types by category
+    Route::get('/api/categories/{category}/types', function ($categoryId) {
+        $types = \App\Models\Type::where('category_id', $categoryId)->get();
+        return response()->json($types);
+    })->middleware('auth');
+
+
+
+
+
+});
+
+require __DIR__.'/auth.php';
